@@ -53,4 +53,4 @@ const getError = (msg : string): never => {
     throw new Error(msg);
 }
 
-const x : number = getError("ABCD")
+// const x : number = getError("ABCD")
