@@ -34,4 +34,4 @@ const employee2 = new Employee("Jahan", 343434);
 
 // employee.baseSalary = 3000;
 
-console.log(employee.salaryWithBonus);
+// console.log(employee.salaryWithBonus);
