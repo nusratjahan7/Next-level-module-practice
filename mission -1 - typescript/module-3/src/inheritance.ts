@@ -40,4 +40,4 @@ const employee = new Employee("Nusrat", 22000);
 
 const manager = new Manager("Nusrat", 34343, 5);
 
-console.log(manager.describe());
+// console.log(manager.describe());
