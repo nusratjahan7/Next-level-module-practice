@@ -39,3 +39,5 @@ const employee = new Employee("Nusrat", 22000);
 // console.log(employee.describe());
 
 const manager = new Manager("Nusrat", 34343, 5);
+
+console.log(manager.describe());
