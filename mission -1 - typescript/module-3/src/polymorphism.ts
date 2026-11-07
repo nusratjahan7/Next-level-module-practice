@@ -46,6 +46,6 @@ const employee = new Employee("Nusrat", 22000);
 const manager = new Manager("Zahid", 30000);
 const developer = new Developer("Nus", 30000, "backend");
 
-console.log(employee.calculatePay(0.4));
-console.log(manager.calculatePay());
-console.log(developer.calculatePay(0.1));
+// console.log(employee.calculatePay(0.4));
+// console.log(manager.calculatePay());
+// console.log(developer.calculatePay(0.1));
