@@ -12,7 +12,7 @@ class Input extends UIElement {
         super(id);
     }
     render() {
-        return `<input id=${this.id} type=${this.type} name=${this.id} placeholder=${this.placeholder} />`;
+        return `<input id=${this.id} type=${this.type} name=${this.id} placeholder="${this.placeholder}" />`;
     }
 }
 
@@ -28,11 +28,37 @@ class Button extends UIElement {
     }
 }
 
+class Form extends UIElement {
+    private children: UIElement[] = [];
+
+    appendChild(child: UIElement) {
+        this.children.push(child);
+    }
+
+    render() {
+        const childrenHTML = this.children
+            .map((child) => child.render())
+            .join("\n ");
+
+        return `<form id ="${this.id}" style="border: 1px solid #ccc; padding: 20px; display: flex; flex-direction: column; gap: 13px; width: 450px; border-radius: 20px;">\n ${childrenHTML} \n</form>`;
+    }
+}
+
+const formElemnet = new Form("login-form");
+
 const emailInput = new Input("email", "email", "Enter your email");
 const passwordInput = new Input("pass", "password", "Enter your password");
 
 const submitButton = new Button("submit-btn", "Submit");
 
-console.log(emailInput.render());
-console.log(passwordInput.render());
-console.log(submitButton.render());
+formElemnet.appendChild(emailInput);
+formElemnet.appendChild(passwordInput);
+formElemnet.appendChild(submitButton);
+
+console.log(formElemnet.render());
+
+const rootElement = document.getElementById("root");
+
+if (rootElement) {
+    rootElement.innerHTML = formElemnet.render();
+}
