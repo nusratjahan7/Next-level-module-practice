@@ -7,6 +7,7 @@ import {
 } from "http";
 import { json } from "stream/consumers";
 import routeHandler from "./routes/route";
+import config from "./config";
 
 const server: Server = createServer(
     (req: IncomingMessage, res: ServerResponse) => {
@@ -18,6 +19,6 @@ const server: Server = createServer(
     },
 );
 
-server.listen(5000, () => {
-    console.log("Server is running!!");
+server.listen(config, () => {
+    console.log(`server is running on the port ${config.port}`);
 });
