@@ -4,7 +4,7 @@ import express, {
     type Response,
 } from "express";
 
-import { Pool } from "pg";
+import { Pool, Result } from "pg";
 
 const app: Application = express();
 const port = 5000;
@@ -52,6 +52,8 @@ app.get("/", (req: Request, res: Response) => {
     });
 });
 
+//* create user
+
 app.post("/api/v1/users", async (req: Request, res: Response) => {
     try {
         const { name, email, password, age } = req.body;
@@ -80,10 +82,12 @@ app.post("/api/v1/users", async (req: Request, res: Response) => {
     }
 });
 
+//* show all users
+
 app.get("/api/v1/users", async (req: Request, res: Response) => {
     try {
         const result = await pool.query(`SELECT * FROM users`);
-        res.json({
+        res.status(200).json({
             success: true,
             message: "User retrived successfully!!",
             data: result.rows,
@@ -97,6 +101,8 @@ app.get("/api/v1/users", async (req: Request, res: Response) => {
     }
 });
 
+//* show user by id
+
 // req.url => /prod/123
 app.get("/api/v1/users/:id", async (req: Request, res: Response) => {
     try {
@@ -109,8 +115,14 @@ app.get("/api/v1/users/:id", async (req: Request, res: Response) => {
             [id],
         );
         // console.log(result);
+        if (result.rowCount === 0) {
+            res.status(404).json({
+                success: false,
+                message: "User Not Found",
+            });
+        }
 
-        res.json({
+        res.status(200).json({
             success: true,
             message: "User retrived successfully!!",
             data: result.rows[0],
@@ -123,6 +135,8 @@ app.get("/api/v1/users/:id", async (req: Request, res: Response) => {
         });
     }
 });
+
+//* update user
 
 app.put("/api/v1/users/:id", async (req: Request, res: Response) => {
     try {
@@ -146,11 +160,49 @@ app.put("/api/v1/users/:id", async (req: Request, res: Response) => {
                 id,
             ],
         );
+        if (result.rowCount === 0) {
+            res.status(404).json({
+                success: false,
+                message: "User Not Found",
+            });
+        }
         // console.log(result);
-        res.json({
+        res.status(200).json({
             success: true,
             message: "User update successfully!!",
             data: result.rows[0],
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: error?.message,
+            error: error,
+        });
+    }
+});
+
+//* Delete User
+
+app.delete("/api/v1/users/:id", async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+
+        const result = await pool.query(
+            `
+            DELETE FROM users WHERE id=$1
+            `,
+            [id],
+        );
+        if (result.rowCount === 0) {
+            res.status(404).json({
+                success: false,
+                message: "User Not Found",
+            });
+        }
+        res.status(200).json({
+            success: true,
+            message: "User Deleted successfully!!",
+            // data: result.rows[0],
         });
     } catch (error: any) {
         res.status(500).json({
