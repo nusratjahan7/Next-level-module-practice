@@ -73,7 +73,7 @@ app.post("/api/v1/users", async (req: Request, res: Response) => {
         });
     } catch (error: any) {
         res.status(500).json({
-            success: true,
+            success: false,
             message: error?.message,
             error: error,
         });
@@ -90,7 +90,7 @@ app.get("/api/v1/users", async (req: Request, res: Response) => {
         });
     } catch (error: any) {
         res.status(500).json({
-            success: true,
+            success: false,
             message: error?.message,
             error: error,
         });
@@ -117,7 +117,44 @@ app.get("/api/v1/users/:id", async (req: Request, res: Response) => {
         });
     } catch (error: any) {
         res.status(500).json({
+            success: false,
+            message: error?.message,
+            error: error,
+        });
+    }
+});
+
+app.put("/api/v1/users/:id", async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const { name, password, age, is_Active } = req.body;
+        const result = await pool.query(
+            `
+            UPDATE users 
+            SET
+            name = COALESCE($1, name),
+            password = COALESCE($2, password),
+            age = COALESCE($3, age),
+            is_Active = COALESCE($4, is_Active)
+            WHERE id = $5 RETURNING *
+            `,
+            [
+                name ?? null,
+                password ?? null,
+                age ?? null,
+                is_Active ?? null,
+                id,
+            ],
+        );
+        // console.log(result);
+        res.json({
             success: true,
+            message: "User update successfully!!",
+            data: result.rows[0],
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
             message: error?.message,
             error: error,
         });
