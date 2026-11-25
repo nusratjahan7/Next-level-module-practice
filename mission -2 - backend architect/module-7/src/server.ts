@@ -5,16 +5,16 @@ import express, {
 } from "express";
 
 import { Pool, Result } from "pg";
+import config from "./config";
 
 const app: Application = express();
-const port = 5000;
 
 app.use(express.json());
 app.use(express.text());
 app.use(express.urlencoded({ extended: true }));
 
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL_POOLED,
+    connectionString: config.connection_string,
 });
 
 const initDB = async () => {
@@ -213,6 +213,6 @@ app.delete("/api/v1/users/:id", async (req: Request, res: Response) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`The Express server is running on the port ${port}`);
+app.listen(config.port, () => {
+    console.log(`The Express server is running on the port ${config.port}`);
 });
